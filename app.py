@@ -42,6 +42,10 @@ else:
     # Convert column to numeric if it's not already numeric (ignoring errors)
     df_industry[column_to_rank] = pd.to_numeric(df_industry[column_to_rank], errors='coerce')
 
+    # Handling NaN values in the column to rank (if any)
+    # We can either fill NaN with a value or drop rows with NaN in the selected column
+    df_industry.dropna(subset=[column_to_rank], inplace=True)  # Drop rows with NaN in the ranking column
+
     # Sorting the data by selected column
     df_sorted = df_industry.sort_values(by=column_to_rank, ascending=False)
 
@@ -55,4 +59,4 @@ else:
         # Add a rank column based on the selected column
         df_sorted['Rank'] = df_sorted[column_to_rank].rank(ascending=False, method='min')
         st.write("### Full Data with Rank")
-        st.dataframe(df_sorted)
+        st.dataframe(df_sorted[['Stock', 'Industry', column_to_rank, 'Rank']])
