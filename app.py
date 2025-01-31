@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 
 # Load the data from Excel file
-@st.cache
 def load_data():
     try:
         data = pd.read_excel('Stock_Financial_Performance_Analysis_with_PE_from_excel.xlsx')
@@ -25,7 +24,7 @@ else:
     st.write("### Data Preview")
     st.dataframe(df.head())
 
-    # Display column names and data types
+    # Display column names and data types for debugging
     st.write("Columns in the dataset:", df.columns)
     st.write("Data Types:", df.dtypes)
 
