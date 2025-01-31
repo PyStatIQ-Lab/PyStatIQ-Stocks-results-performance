@@ -38,6 +38,10 @@ else:
     # Dropdown for selecting column for ranking
     column_to_rank = st.selectbox("Select the column to rank", df.columns)
 
+    # Ensure the selected column is numeric or can be compared for ranking
+    # Convert column to numeric if it's not already numeric (ignoring errors)
+    df_industry[column_to_rank] = pd.to_numeric(df_industry[column_to_rank], errors='coerce')
+
     # Sorting the data by selected column
     df_sorted = df_industry.sort_values(by=column_to_rank, ascending=False)
 
