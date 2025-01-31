@@ -21,14 +21,21 @@ columns = df.columns.tolist()
 columns.remove('Stock')  # Remove 'Stock' from the column list, as we don't want to rank by it
 selected_column = st.sidebar.selectbox('Select Column to Rank By', columns)
 
-# Sort the data by the selected column and display it
-sorted_df = df.sort_values(by=selected_column, ascending=False)
-st.write(f"Ranking by {selected_column}")
-st.dataframe(sorted_df[['Stock', 'Sector', 'Industry', selected_column, 'Performance Rank']])
+# Sidebar: Select an industry
+industry_filter = st.sidebar.selectbox('Select Industry to Filter By', df['Industry'].unique())
 
-# Optional: You can add more interactivity or options like filtering by sector or industry
-sector_filter = st.sidebar.selectbox('Filter by Sector', df['Sector'].unique())
-filtered_df = sorted_df[sorted_df['Sector'] == sector_filter]
-st.write(f"Ranking by {selected_column} (Filtered by {sector_filter} Sector)")
-st.dataframe(filtered_df[['Stock', 'Sector', 'Industry', selected_column, 'Performance Rank']])
+# Filter the data based on selected industry
+industry_df = df[df['Industry'] == industry_filter]
+
+# Sort the filtered data by the selected column and display top-ranked stocks
+sorted_industry_df = industry_df.sort_values(by=selected_column, ascending=False)
+
+# Display top stocks in the selected industry
+st.write(f"Top Ranked Stocks in the {industry_filter} Industry (Sorted by {selected_column})")
+st.dataframe(sorted_industry_df[['Stock', 'Sector', 'Industry', selected_column, 'Performance Rank']])
+
+# Optionally, show more details like top 10 or allow ranking by more columns
+top_n = st.slider('Select Top N Stocks', 1, 20, 10)
+st.write(f"Top {top_n} Stocks in {industry_filter} Industry")
+st.dataframe(sorted_industry_df[['Stock', 'Sector', 'Industry', selected_column, 'Performance Rank']].head(top_n))
 
