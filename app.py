@@ -28,15 +28,22 @@ else:
     st.write("Columns in the dataset:", df.columns)
     st.write("Data Types:", df.dtypes)
 
+    # Dropdown for selecting the industry
+    industry_list = df['Industry'].unique()
+    selected_industry = st.selectbox("Select an Industry", industry_list)
+
+    # Filter data by selected industry
+    df_industry = df[df['Industry'] == selected_industry]
+
     # Dropdown for selecting column for ranking
     column_to_rank = st.selectbox("Select the column to rank", df.columns)
 
     # Sorting the data by selected column
-    df_sorted = df.sort_values(by=column_to_rank, ascending=False)
+    df_sorted = df_industry.sort_values(by=column_to_rank, ascending=False)
 
-    # Display the top 10 rows of the sorted data
-    st.write(f"### Top 10 Stocks based on {column_to_rank}")
-    st.dataframe(df_sorted[['Stock', column_to_rank]].head(10))
+    # Display the top-ranked stock based on the selected industry and column
+    st.write(f"### Top Stock in {selected_industry} based on {column_to_rank}")
+    st.dataframe(df_sorted[['Stock', 'Industry', column_to_rank]].head(1))
 
     # Optionally, display the full data with ranks
     show_full_data = st.checkbox('Show full data with ranks')
